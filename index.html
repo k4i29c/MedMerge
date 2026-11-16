@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MedMerge: one list for all your medicines</title>
+  <meta name="description" content="Prototype: combine medicines from hospital, polyclinic and GP into one list that flags clashes and shows what to take when.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="shell">
+    <div class="brand no-print">💊 MedMerge <span class="proto">prototype · fictional data</span></div>
+    <main id="app" aria-live="polite"></main>
+  </div>
+  <nav class="no-print" aria-label="Main">
+    <a href="#today"><span aria-hidden="true">📅</span>Today</a>
+    <a href="#meds"><span aria-hidden="true">💊</span>My meds</a>
+    <a href="#add" class="add"><span aria-hidden="true">＋</span>Add</a>
+    <a href="#doctor"><span aria-hidden="true">🩺</span>For doctor</a>
+    <a href="#settings"><span aria-hidden="true">⚙️</span>Settings</a>
+  </nav>
+  <div id="toast" class="toast no-print" role="status"></div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+{
+  "label-panadol.png": {
+    "generic": "paracetamol",
+    "strengthMg": 500,
+    "doseQty": 2,
+    "asNeeded": false,
+    "food": "after",
+    "durationDays": 5,
+    "source": "GP"
+  },
+  "label-nurofen.png": {
+    "generic": "ibuprofen",
+    "strengthMg": 400,
+    "doseQty": 1,
+    "asNeeded": true,
+    "maxPerDay": 3,
+    "food": "after",
+    "source": "GP",
+    "quantity": 10
+  },
+  "label-klacid.png": {
+    "generic": "clarithromycin",
+    "strengthMg": 500,
+    "doseQty": 1,
+    "asNeeded": false,
+    "food": "any",
+    "durationDays": 7,
+    "source": "GP",
+    "finishCourse": true
+  },
+  "label-clarityne.png": {
+    "generic": "loratadine",
+    "strengthMg": 10,
+    "doseQty": 1,
+    "slots": [
+      "morning"
+    ],
+    "asNeeded": false,
+    "durationDays": 5,
+    "source": "GP"
+  },
+  "label-augmentin.png": {
+    "generic": "amoxicillin",
+    "strengthMg": 625,
+    "doseQty": 1,
+    "asNeeded": false,
+    "food": "after",
+    "durationDays": 5,
+    "finishCourse": true,
+    "source": "GP"
+  }
+}
