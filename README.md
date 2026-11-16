@@ -77,3 +77,4 @@ docs/screenshots/        screenshots for the write-up
 ## Deploy (GitHub Pages)
 
 Push to GitHub → *Settings → Pages* → Source: *Deploy from a branch* → `main` / root. The app will be at `https://<username>.github.io/<repo>/`.
+"# MedMerge" 
