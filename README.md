@@ -1,43 +1,50 @@
 # MedMerge
 
-**One medication list for patients who get medicines from many places.**
+**One medication list across every clinic.**
 
-Older patients often take medicines from a hospital (after surgery), a polyclinic (chronic conditions), a GP (acute illness) and the pharmacy. No single list shows all of them together, so:
+MedMerge is a prototype that lets patients scan the labels of medicines from different healthcare providers (hospitals, polyclinics, GPs and pharmacies) into one list. The list flags duplicates, clashes and allergies, shows a clear daily schedule, and produces a one-page summary for any doctor.
 
-- doctors can prescribe something that duplicates or clashes with what the patient already takes, and
-- patients who are unwell or confused lose track of what to take when, and whether it is before or after food.
+- **Live prototype:** https://k4i29c.github.io/MedMerge/ (works without an API key: use the sample labels on the Add page)
+- All people, clinics and labels in the prototype are **fictional**. Not medical advice.
 
-MedMerge is a prototype that lets the **patient** scan each medicine label, confirm what was read, and keep one combined list that **flags duplicates and known clashes** and turns everything into a **simple daily schedule**. A one-page **summary for the doctor** can be shown or printed at any clinic.
+![MedMerge screens: Today schedule, duplicate warning, allergy warning, doctor summary](docs/screenshots/medmerge-screens.png)
 
-> ⚠️ Prototype with **fictional data only** (Mr Lim, the clinics and labels are made up). Clash checks use a small example rule set and are not a complete interaction check. Not medical advice.
+## The pain point
 
-## Demo flow
+Patients who get medicines from several places have no single list of everything they take. An older patient might have chronic medicines from a polyclinic, painkillers from a hospital after surgery, acute medicines from a GP and over-the-counter ones from a pharmacy, each with its own bag, label and instructions. This causes three problems:
 
-1. **Today**: Mr Lim (68) sees what to take now. Each time of day is ordered the way he'd actually take things: **① before food → ② with or without food → ③ after food**. Every medicine shows what it's for in plain words ("For: Gastric / protect stomach"). "Only if needed" medicines appear in the same list as optional (dashed) items, with a *Taken 1 of max 3 today* counter that locks once the daily maximum is reached.
-2. **Add**: he scans the label from today's GP visit (try the sample labels). The app shows what it read and highlights fields to double-check.
-3. Scanning **Panadol** triggers: *"Same medicine twice: Paracetamol. Together the labels add up to as much as 6,000 mg a day. The usual adult maximum is 4,000 mg."* This appears **before** he saves.
-4. **My meds**: one list grouped by Hospital / Polyclinic / GP, with flags.
-5. **For doctor**: a printable summary with all medicines, sources, daily amounts and flags.
+1. **Duplicates and clashes.** The same drug can arrive under different brand names (Panadol from the GP plus paracetamol from the hospital), or two medicines can interact. Doctors may not see the full list, and patients often can't remember exactly what they take.
+2. **Allergies and conditions get missed.** Elderly patients visiting a new clinic may not remember exactly which medicine they are allergic to, or the name of their condition.
+3. **Confusion about taking them.** When unwell, patients struggle to track what to take when, before or after food, which medicines are optional, and how long to continue.
 
-Other samples: **Nurofen** (a second NSAID alongside the hospital's Arcoxia; a "when needed" medicine whose course is *until this supply runs out*), **Klacid** (clashes with his statin and blood-pressure medicine; *finish the whole course*), **Augmentin** from a different clinic (Mr Lim is **allergic to penicillin**: flagged before saving) and **Clarityne** (no warnings, to show it doesn't cry wolf).
+Singapore's NEHR and HealthHub already hold medication and allergy records, and HealthHub offers reminders. The gaps are private clinics not yet fully connected, over-the-counter medicines, the same drug under different brand names, and one daily routine a patient can actually follow.
 
-**Settings** holds the patient's **allergies** (common groups, plus free text such as "Bactrim") and **conditions** (G6PD deficiency, pregnancy, breastfeeding, kidney disease, liver disease, stomach ulcer, asthma). Every medicine is checked against them, and they appear at the top of the doctor summary.
+## Who it's for
 
-## Design decisions
+- **Primary:** older adults taking medicines from several providers, such as the demo patient Mr Lim, 68 (diabetes, high blood pressure and cholesterol from the polyclinic, recent knee surgery at a hospital, now a GP visit for a cough).
+- **Secondary:** doctors and pharmacists, who need a quick, complete summary of current medicines, allergies and conditions before prescribing.
+
+## How it works
+
+**Core workflow:** Mr Lim scans the labels from his different clinics, and the app combines them into one list that catches problems and tells him what to take when.
+
+1. **Scan and confirm.** He photographs a label. AI reads it and shows the details back for him to check, with any fields it was unsure about highlighted. Warnings appear before he saves.
+2. **One list with warnings.** Medicines are grouped by where they came from and checked for duplicates (including different brand names), two of the same type, known interactions, allergies, and conditions such as G6PD deficiency. For example, Panadol from the GP plus hospital paracetamol adds up to 6,000 mg a day, above the usual 4,000 mg maximum.
+3. **A clear daily schedule.** Each time of day is ordered before food, then either, then after food. Each medicine says what it's for in plain words, and optional medicines show a daily limit. A one-page summary can be shown to any doctor.
+
+The demo starts with Mr Lim's existing hospital and polyclinic medicines. Five fictional sample labels, from a GP visit and another clinic, show the app at work: four trigger different warnings (duplicate, same type, interaction, allergy), and one deliberately triggers none.
+
+![More MedMerge screens: checking scanned fields, optional medicines with a daily limit, all warnings, allergies and conditions](docs/screenshots/medmerge-screens-2.png)
+
+## Key design decisions
+
+**AI is used only where it's good at the job, and safety decisions come from fixed rules that can be tested.**
 
 | Decision | Why |
 |---|---|
-| **AI only reads the label; fixed rules decide warnings** | Reading messy labels is what vision models do well. Safety logic must be predictable, testable and explainable, so it is rule-based (`js/rules.js`) and unit-tested. |
-| **Patient confirms every scan** | The AI's output is a suggestion. Uncertain fields (handwriting, guessed times of day, missing food instruction) are highlighted "Please check". |
-| **Unknown medicines are reported as "Not checked"** | Silence would wrongly suggest "safe". The same goes for typed allergies we can't match (e.g. "mango"). |
-| **Daily list ordered by food timing** | A patient works through a time slot in the order they eat: before-food pills first, after-food pills last. |
-| **"Only if needed" medicines live in the time slots, as optional** | Many acute medicines are optional. Showing them alongside the daily ones lets the patient decide at that moment, and the max-per-day lock stops accidental over-use. |
-| **Three course types: ongoing / set number of days / until supply runs out** | Antibiotics, eye drops and creams run for set days; painkillers are stopped when better. "Finish the whole course" is shown only when the label says so. |
-| **The app never tells anyone to stop or change a medicine** | Every warning points to the pharmacist or doctor. |
-| **Demo mode works without an API key** | Reviewers can try it instantly. Sample labels use pre-recorded scan results that run through the same code path as live scans. |
-| **No login or backend; data stays in the browser** | Keeps the prototype focused on the core workflow. |
-
-**Deliberately left out:** pill photos, home stock tracking, caregiver accounts, push notifications, translations, NEHR/HealthHub integration, and children's weight-based dosing.
+| AI only reads the label; fixed rules decide the warnings | Reading messy labels suits a vision model. Medication safety must be predictable and explainable, so it's rule-based (`js/rules.js`) and covered by unit tests. |
+| The patient confirms every scan | AI output is a suggestion. Uncertain fields are highlighted for checking before saving. |
+| Medicines and allergies the app can't recognise are marked "Not checked" | Silence would wrongly suggest "safe". |
 
 ## Run it
 
@@ -47,34 +54,46 @@ No build step. Any static server works:
 python3 -m http.server 8000   # then open http://localhost:8000
 ```
 
-(Opening `index.html` directly from disk will not work because the app uses ES modules.)
+(Opening `index.html` directly from disk won't work, because the app uses ES modules.)
 
-**Live label scanning (optional):** open *Settings*, paste an Anthropic API key, then use *Scan a label* with a phone photo. The key is stored only in your browser. This is fine for a prototype; a real app would call the API from a server.
+**Live label scanning (optional):** open *Settings*, paste an Anthropic API key, then use *Scan a label* with a phone photo. The key is stored only in your browser, which is fine for a prototype but not for production (see below).
 
-## Tests and scanner accuracy check
+## Tests
 
 ```bash
-npm test                                   # rule tests (no dependencies needed)
+npm test                                   # 20 unit tests for the safety rules and scan handling (no dependencies)
 ANTHROPIC_API_KEY=sk-ant-... npm run eval  # scanner accuracy on eval/labels vs eval/expected.json
 ```
-
-To test more labels, add photos to `eval/labels/` and their correct values to `eval/expected.json`.
 
 ## Project structure
 
 ```
 index.html, styles.css   UI shell and styles (mobile-first, large text)
 js/app.js                screens, state (localStorage), events
-js/rules.js              drug list, duplicate / same-type / interaction / allergy / condition rules, schedule helpers
-js/extract.js            label-reading prompt + Claude API call + normalising the result
+js/rules.js              drug list; duplicate, same-type, interaction, allergy and condition rules; schedule helpers
+js/extract.js            label-reading prompt, Claude API call, normalising the result
 js/samples.js            fictional demo patient and pre-recorded sample scans
 samples/                 fictional label images (generated by scripts/make_labels.py)
-tests/                   unit tests for the safety rules and scan normalisation
+tests/                   unit tests
 eval/                    scanner accuracy script and expected values
-docs/screenshots/        screenshots for the write-up
+docs/screenshots/        screenshots
 ```
 
-## Deploy (GitHub Pages)
+## Limitations and what production would need
 
-Push to GitHub → *Settings → Pages* → Source: *Deploy from a branch* → `main` / root. The app will be at `https://<username>.github.io/<repo>/`.
-"# MedMerge" 
+- The warning rules are a **small example set** created for the demo, not a complete interaction or allergy check.
+- Live label scanning is implemented but was tested only with demo data.
+- There are unit tests, but no end-to-end tests in the repository yet.
+
+Before production:
+
+- **Security:** the API key is stored in and sent from the browser. Production needs a server that holds the key and calls the API.
+- **Privacy:** medicines, allergies and conditions are stored unencrypted in the browser. Production needs proper accounts, encrypted storage, and handling that meets Singapore's PDPA.
+- **Correctness:** drug names are matched by simple text search, so combination products may be only partly checked. Production should use a maintained, coded drug database.
+- **Interoperability:** a real version should connect to Singapore's national systems, such as NEHR and HealthHub, using standard healthcare data formats.
+
+**Next steps:** pharmacist review of the rules, end-to-end tests, and linking with HealthHub or NEHR instead of duplicating them.
+
+## How it was built
+
+Built with Claude (Anthropic) as the coding agent: it wrote the code and ran the tests and browser walkthroughs. I chose the problem, set the scope and safety rules, reviewed the working prototype, and directed the changes.
