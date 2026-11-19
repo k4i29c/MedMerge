@@ -4,10 +4,7 @@
 
 MedMerge is a prototype that lets patients scan the labels of medicines from different healthcare providers (hospitals, polyclinics, GPs and pharmacies) into one list. The list flags duplicates, clashes and allergies, shows a clear daily schedule, and produces a one-page summary for any doctor.
 
-- **Live prototype:** https://k4i29c.github.io/MedMerge/ (works without an API key: use the sample labels on the Add page)
 - All people, clinics and labels in the prototype are **fictional**. Not medical advice.
-
-![MedMerge screens: Today schedule, duplicate warning, allergy warning, doctor summary](docs/screenshots/medmerge-screens.png)
 
 ## The pain point
 
