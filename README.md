@@ -34,18 +34,6 @@ Singapore's NEHR and HealthHub already hold medication and allergy records, and 
 
 The demo starts with Mr Lim's existing hospital and polyclinic medicines. Five fictional sample labels, from a GP visit and another clinic, show the app at work: four trigger different warnings (duplicate, same type, interaction, allergy), and one deliberately triggers none.
 
-![More MedMerge screens: checking scanned fields, optional medicines with a daily limit, all warnings, allergies and conditions](docs/screenshots/medmerge-screens-2.png)
-
-## Key design decisions
-
-**AI is used only where it's good at the job, and safety decisions come from fixed rules that can be tested.**
-
-| Decision | Why |
-|---|---|
-| AI only reads the label; fixed rules decide the warnings | Reading messy labels suits a vision model. Medication safety must be predictable and explainable, so it's rule-based (`js/rules.js`) and covered by unit tests. |
-| The patient confirms every scan | AI output is a suggestion. Uncertain fields are highlighted for checking before saving. |
-| Medicines and allergies the app can't recognise are marked "Not checked" | Silence would wrongly suggest "safe". |
-
 ## Run it
 
 No build step. Any static server works:
@@ -79,18 +67,6 @@ eval/                    scanner accuracy script and expected values
 docs/screenshots/        screenshots
 ```
 
-## Limitations and what production would need
-
-- The warning rules are a **small example set** created for the demo, not a complete interaction or allergy check.
-- Live label scanning is implemented but was tested only with demo data.
-- There are unit tests, but no end-to-end tests in the repository yet.
-
-Before production:
-
-- **Security:** the API key is stored in and sent from the browser. Production needs a server that holds the key and calls the API.
-- **Privacy:** medicines, allergies and conditions are stored unencrypted in the browser. Production needs proper accounts, encrypted storage, and handling that meets Singapore's PDPA.
-- **Correctness:** drug names are matched by simple text search, so combination products may be only partly checked. Production should use a maintained, coded drug database.
-- **Interoperability:** a real version should connect to Singapore's national systems, such as NEHR and HealthHub, using standard healthcare data formats.
 
 **Next steps:** pharmacist review of the rules, end-to-end tests, and linking with HealthHub or NEHR instead of duplicating them.
 
