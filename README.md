@@ -63,10 +63,3 @@ tests/                   unit tests
 eval/                    scanner accuracy script and expected values
 docs/screenshots/        screenshots
 ```
-
-
-**Next steps:** pharmacist review of the rules, end-to-end tests, and linking with HealthHub or NEHR instead of duplicating them.
-
-## How it was built
-
-Built with Claude (Anthropic) as the coding agent: it wrote the code and ran the tests and browser walkthroughs. I chose the problem, set the scope and safety rules, reviewed the working prototype, and directed the changes.
